@@ -1,0 +1,9 @@
+.horizontal-line{
+  display: block;
+  margin: 2% auto;
+  border-style: inset;
+  border-width: 1px;
+}
+button#lihat{
+  margin-top: 1%;
+}

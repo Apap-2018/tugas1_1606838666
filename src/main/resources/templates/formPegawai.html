@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.com">
+  <head>
+    <title th:replace="fragments/fragment :: title"></title>
+    <object th:include="fragments/fragment :: css&js" th:remove="tag"></object>
+  </head>
+
+  <body>
+    <nav th:replace="fragments/fragment :: navbar"></nav>
+
+    <div class="container-fluid">
+      <h3>Tambah Pegawai</h3>
+
+      <form th:action="@{'/pegawai/' + ${endpoint}}" method="POST">
+        <div class="form-group row">
+          <label for="namaPegawai" class="col-2 col-form-label">Nama</label>
+          <div class="col-4">
+            <input type="text" class="form-control" id="namaPegawai">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tempatLahir" class="col-2 col-form-label">Tempat Lahir</label>
+          <div class="col-4">
+            <input type="text" class="form-control" id="tempatLahir">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tanggalLahir" class="col-2 col-form-label">Tanggal Lahir</label>
+          <div class="col-4">
+            <input type="date" class="form-control" id="tanggalLahir">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tahunMasuk" class="col-2 col-form-label">Tahun Masuk</label>
+          <div class="col-4">
+            <input type="number" class="form-control" id="tahunMasuk">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="provinsi" class="col-2 col-form-label">Provinsi</label>
+          <div class="col-4">
+            <select class="form-control" id="provinsi">
+
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="namaInstansi" class="col-2 col-form-label">Nama Instansi</label>
+          <div class="col-4">
+            <select class="form-control" id="namaInstansi">
+
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="jabatan" class="col-2 col-form-label">Jabatan</label>
+          <div class="col-4">
+            <select class="form-control" id="jabatan">
+
+            </select>
+            <a href="#">Tambah Jabatan Lainnya</a>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+    </div>
+  </body>
+</html>
