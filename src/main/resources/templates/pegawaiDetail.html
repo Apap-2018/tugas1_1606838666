@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.com">
+  <head>
+    <title th:replace="fragments/fragment :: title"></title>
+    <object th:include="fragments/fragment :: css&js" th:remove="tag"></object>
+    <link rel="stylesheet" th:href="@{/css/pegawaiDetail.css}">
+  </head>
+
+  <body>
+    <nav th:replace="fragments/fragment :: navbar"></nav>
+
+    <div class="container-fluid">
+      <h3 class="title" th:text="'Lihat Data Pegawai - ' + ${pegawai.getNip()}"></h3>
+      <div class="row">
+        <div class="col-4">NIP</div>
+        <div class="col-4" th:text="${pegawai.getNip()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Nama</div>
+        <div class="col-4" th:text="${pegawai.getNama()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Tempat Lahir</div>
+        <div class="col-4" th:text="${pegawai.getTempatLahir()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Tanggal Lahir</div>
+        <div class="col-4" th:text="${pegawai.getTanggalLahir()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Tahun Masuk</div>
+        <div class="col-4" th:text="${pegawai.getTahunMasuk()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Nama Instansi</div>
+        <div class="col-4" th:text="${pegawai.getInstansi().getNama()}"></div>
+      </div>
+      <div class="row">
+        <div class="col-4">Jabatan</div>
+        <div class="col-4">
+          <ul style="margin-bottom: 0;">
+            <li th:each="jabatan : ${pegawai.getListJabatan()}"
+            th:text="${jabatan.getJabatan().getNama()}"
+            >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">Gaji</div>
+        <div class="col-4" th:text="'Rp ' + ${pegawai.getGaji()}"></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -115,4 +115,18 @@ public class PegawaiModel{
     public void setListJabatan(List<JabatanPegawaiModel> listJabatan) {
         this.listJabatan = listJabatan;
     }
+
+    public int getGaji() {
+        double persentaseTunjangan = this.getInstansi().getProvinsi().getPresentaseTunjangan();
+        double gajiPokokTertinggi = 0;
+        for (JabatanPegawaiModel jabatanGateway: this.getListJabatan()) {
+            double gajiEvaluasi = jabatanGateway.getJabatan().getGajiPokok();
+            if ( gajiEvaluasi > gajiPokokTertinggi) {
+                gajiPokokTertinggi = gajiEvaluasi;
+            }
+        }
+        Double gaji = gajiPokokTertinggi + ((persentaseTunjangan / 100) * gajiPokokTertinggi);
+
+        return gaji.intValue();
+    }
 }

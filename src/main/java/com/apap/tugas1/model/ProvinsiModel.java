@@ -20,7 +20,7 @@ public class ProvinsiModel {
 
     @NotNull
     @Column(name = "presentase_tunjangan", nullable = false)
-    private double presentase_tunjangan;
+    private double presentaseTunjangan;
 
     @OneToMany(mappedBy = "provinsi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<InstansiModel> listInstansi;
@@ -41,12 +41,12 @@ public class ProvinsiModel {
         this.nama = nama;
     }
 
-    public double getPresentase_tunjangan() {
-        return presentase_tunjangan;
+    public double getPresentaseTunjangan() {
+        return presentaseTunjangan;
     }
 
-    public void setPresentase_tunjangan(double presentase_tunjangan) {
-        this.presentase_tunjangan = presentase_tunjangan;
+    public void setPresentaseTunjangan(double presentase_tunjangan) {
+        this.presentaseTunjangan = presentase_tunjangan;
     }
 
     public List<InstansiModel> getListInstansi() {

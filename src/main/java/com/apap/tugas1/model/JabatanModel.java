@@ -25,7 +25,7 @@ public class JabatanModel {
 
     @NotNull
     @Column(name = "gaji_pokok", nullable = false)
-    private double gaji_pokok;
+    private double gajiPokok;
 
     @OneToMany(mappedBy = "jabatan", fetch = FetchType.LAZY,  cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<JabatanPegawaiModel> listJabatan;
@@ -54,12 +54,12 @@ public class JabatanModel {
         this.deskripsi = deskripsi;
     }
 
-    public double getGaji_pokok() {
-        return gaji_pokok;
+    public double getGajiPokok() {
+        return gajiPokok;
     }
 
-    public void setGaji_pokok(double gaji_pokok) {
-        this.gaji_pokok = gaji_pokok;
+    public void setGajiPokok(double gaji_pokok) {
+        this.gajiPokok = gaji_pokok;
     }
 
     public List<JabatanPegawaiModel> getListJabatan() {
