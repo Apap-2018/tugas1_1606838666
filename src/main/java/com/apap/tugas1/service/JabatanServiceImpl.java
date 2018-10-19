@@ -44,4 +44,9 @@ public class JabatanServiceImpl implements JabatanService {
     public void deleteJabatan(BigInteger id) {
         jabatanDB.deleteById(id);
     }
+
+    @Override
+    public JabatanModel findByNama(String nama) {
+        return jabatanDB.findByNama(nama);
+    }
 }

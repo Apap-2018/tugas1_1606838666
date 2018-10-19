@@ -32,6 +32,23 @@
         <br>
         <button type="submit" class="btn btn-primary" id="lihat">Lihat</button>
       </form>
+      <hr class="horizontal-line">
+
+      <h3>Lihat Pegawai Termuda dan Tertua</h3>
+      <h5>Pilih Instansi</h5>
+      <form th:action="@{/pegawai/termuda-tertua}" method="GET">
+        <select name="id_instansi">
+          <span th:each="provinsi : ${listProvinsi}">
+            <option
+              th:each="instansi : ${provinsi.getListInstansi()}"
+              th:text="${instansi.nama} + ' - ' + ${provinsi.nama}"
+              th:value="${instansi.id}">
+            </option>
+          </span>
+        </select>
+        <br>
+        <button type="submit" class="btn btn-primary" id="lihat">Lihat</button>
+      </form>
     </div>
   </body>
 </html>

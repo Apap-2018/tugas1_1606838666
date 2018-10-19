@@ -7,4 +7,5 @@ import java.util.ArrayList;
 
 public interface JabatanPegawaiService {
     ArrayList<JabatanPegawaiModel> findAllByJabatan(JabatanModel jabatan);
+    void addJabatanPegawai(JabatanPegawaiModel jabatanPegawaiModel);
 }

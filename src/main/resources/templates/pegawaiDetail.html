@@ -50,6 +50,12 @@
         <div class="col-4">Gaji</div>
         <div class="col-4" th:text="'Rp ' + ${pegawai.getGaji()}"></div>
       </div>
+      <div class="row">
+        <form th:action="@{/pegawai/ubah}" method="GET">
+          <input type="hidden" th:value="${pegawai.nip}" name="nip">
+          <button type="submit" class="btn btn-primary">Ubah</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>

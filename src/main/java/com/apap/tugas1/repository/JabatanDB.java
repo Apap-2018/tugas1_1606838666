@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface JabatanDB extends JpaRepository<JabatanModel, Long> {
     Optional<JabatanModel> findById(BigInteger id);
     void deleteById(BigInteger id);
+    JabatanModel findByNama(String nama);
 }

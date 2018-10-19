@@ -12,4 +12,5 @@ public interface JabatanService {
     Optional<JabatanModel> getJabatanById(BigInteger id);
     void editJabatan(JabatanModel jabatan);
     void deleteJabatan(BigInteger id);
+    JabatanModel findByNama(String nama);
 }

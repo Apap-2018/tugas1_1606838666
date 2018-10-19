@@ -1,6 +1,8 @@
 package com.apap.tugas1.service;
 
 
+import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.JabatanPegawaiModel;
 import com.apap.tugas1.model.PegawaiModel;
 
 import java.util.Date;
@@ -11,4 +13,9 @@ public interface PegawaiService {
     Optional<PegawaiModel> findPegawaiByNIP(String nip);
     void addPegawai(PegawaiModel pegawai);
     List<PegawaiModel> findAllByTanggalLahirAndTahunMasuk(Date tanggalLahir, String tahunMasuk);
+    List<PegawaiModel> findAllByInstansiOrderByTanggalLahir(InstansiModel instansi);
+    List<PegawaiModel> getAll();
+    List<PegawaiModel> findAllByInstansi(InstansiModel instansi);
+    List<PegawaiModel> findAllByListJabatan(JabatanPegawaiModel jabatanPegawaiModel);
+
 }

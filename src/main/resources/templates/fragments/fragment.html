@@ -13,11 +13,23 @@
 
   <body>
     <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a href="#" class="navbar-brand">SIPEG</a>
+      <a th:href="@{/}" class="navbar-brand">SIPEG</a>
       <div class="collapse navbar-collapse" id="navbarSupportContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item" th:class="${isHome} ? active : ''">
             <a th:href="@{/}" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item" th:class="${isTambahPegawai} ? active : ''">
+            <a th:href="@{/pegawai/tambah}" class="nav-link">Tambah Pegawai</a>
+          </li>
+          <li class="nav-item" th:class="${isTambahJabatan} ? active : ''">
+            <a th:href="@{/jabatan/tambah}" class="nav-link">Tambah Jabatan</a>
+          </li>
+          <li class="nav-item" th:class="${isCariPegawai} ? active : ''">
+            <a th:href="@{/pegawai/cari}" class="nav-link">Cari Pegawai</a>
+          </li>
+          <li class="nav-item" th:class="${isLihatSemuaJabatan} ? active : ''">
+            <a th:href="@{/jabatan/viewall}" class="nav-link">Lihat Semua Jabatan</a>
           </li>
         </ul>
       </div>

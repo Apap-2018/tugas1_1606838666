@@ -19,4 +19,9 @@ public class JabatanPegawaiServiceImpl implements JabatanPegawaiService {
     public ArrayList<JabatanPegawaiModel> findAllByJabatan(JabatanModel jabatan) {
         return jabatanPegawaiDB.findAllByJabatan(jabatan);
     }
+
+    @Override
+    public void addJabatanPegawai(JabatanPegawaiModel jabatanPegawaiModel) {
+        jabatanPegawaiDB.save(jabatanPegawaiModel);
+    }
 }

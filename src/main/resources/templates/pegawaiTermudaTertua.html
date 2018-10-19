@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.com">
+  <head>
+    <title th:replace="fragments/fragment :: title"></title>
+    <object th:include="fragments/fragment :: css&js" th:remove="tag"></object>
+    <!-- <link rel="stylesheet" th:href="@{/css/.css}"> -->
+  </head>
+
+  <body>
+    <nav th:replace="fragments/fragment :: navbar"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6">
+          <h3 class="title">Data Pegawai Termuda</h3>
+          <div class="row">
+            <div class="col-6">NIP</div>
+            <div class="col-6" th:text="${pegawaiTermuda.nip}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Nama</div>
+            <div class="col-6" th:text="${pegawaiTermuda.nama}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tempat Lahir</div>
+            <div class="col-6" th:text="${pegawaiTermuda.tempatLahir}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tanggal Lahir</div>
+            <div class="col-6" th:text="${pegawaiTermuda.tanggalLahir}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tahun Masuk</div>
+            <div class="col-6" th:text="${pegawaiTermuda.tahunMasuk}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Nama Instansi</div>
+            <div class="col-6" th:text="${pegawaiTermuda.instansi.nama}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Jabatan</div>
+            <div class="col-6">
+              <ul>
+                <li th:each="jabatanPegawai : ${pegawaiTermuda.getListJabatan()}" th:text="${jabatanPegawai.jabatan.nama}"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <h3 class="title">Data Pegawai Tertua</h3>
+          <div class="row">
+            <div class="col-6">NIP</div>
+            <div class="col-6" th:text="${pegawaiTertua.nip}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Nama</div>
+            <div class="col-6" th:text="${pegawaiTertua.nama}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tempat Lahir</div>
+            <div class="col-6" th:text="${pegawaiTertua.tempatLahir}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tanggal Lahir</div>
+            <div class="col-6" th:text="${pegawaiTertua.tanggalLahir}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Tahun Masuk</div>
+            <div class="col-6" th:text="${pegawaiTertua.tahunMasuk}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Nama Instansi</div>
+            <div class="col-6" th:text="${pegawaiTertua.instansi.nama}"></div>
+          </div>
+          <div class="row">
+            <div class="col-6">Jabatan</div>
+            <div class="col-6">
+              <ul>
+                <li th:each="jabatanPegawai : ${pegawaiTertua.getListJabatan()}" th:text="${jabatanPegawai.jabatan.nama}"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

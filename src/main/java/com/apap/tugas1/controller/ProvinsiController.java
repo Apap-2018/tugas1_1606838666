@@ -33,7 +33,7 @@ public class ProvinsiController {
         }
 
         result.setMap(data);
-        result.setResult(listNamaInstansi);
+        result.setListOfString(listNamaInstansi);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

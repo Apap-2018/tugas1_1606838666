@@ -13,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class JabatanController {
@@ -52,6 +50,14 @@ public class JabatanController {
         model.addAttribute("pageTitle", "Detail Jabatan");
         model.addAttribute("jabatan", jabatan);
         return "viewJabatan";
+    }
+    @RequestMapping(value = "/jabatan/viewall", method = RequestMethod.GET)
+    public String viewAllJabatan(Model model) {
+        List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
+
+        model.addAttribute("pageTitle", "Detail Jabatan");
+        model.addAttribute("listJabatan", listJabatan);
+        return "allJabatan";
     }
 
     @RequestMapping(value = "/jabatan/ubah", method = RequestMethod.GET)
@@ -90,6 +96,19 @@ public class JabatanController {
         return "jabatanDeleted";
     }
 
+    @RequestMapping(value = "/jabatan/data/pegawai", method = RequestMethod.GET)
+    public String dataPegawai(Model model) {
+        List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
+        Map<String, Integer> dataPegawaiInstansi = new HashMap<>();
+
+        for (JabatanModel jabatan: listJabatan) {
+            int jumlahPegawai = jabatanPegawaiService.findAllByJabatan(jabatan).size();
+            dataPegawaiInstansi.put(jabatan.getNama(), jumlahPegawai);
+        }
+        model.addAttribute("dataPegawaiInstansi", dataPegawaiInstansi);
+        return "allPegawaiInstansi";
+    }
+
     @RequestMapping(value = "/jabatan/get", method = RequestMethod.GET)
     public ResponseEntity<Object> getJabatan() {
         AjaxResponseBody result = new AjaxResponseBody();
@@ -100,7 +119,7 @@ public class JabatanController {
             listNamaJabatan.add(jabatan.getNama());
         }
 
-        result.setResult(listNamaJabatan);
+        result.setListOfString(listNamaJabatan);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

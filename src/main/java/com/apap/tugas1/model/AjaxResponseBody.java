@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class AjaxResponseBody {
     private Map map;
-    private List<String> result;
+    private List<String> listOfString;
+    private List<PegawaiModel> listOfPegawaiModel;
     private String message;
 
     public String getMessage() {
@@ -16,6 +17,14 @@ public class AjaxResponseBody {
         this.message = message;
     }
 
+    public List<PegawaiModel> getListOfPegawaiModel() {
+        return listOfPegawaiModel;
+    }
+
+    public void setListOfPegawaiModel(List<PegawaiModel> listOfPegawaiModel) {
+        this.listOfPegawaiModel = listOfPegawaiModel;
+    }
+
     public Map getMap() {
         return map;
     }
@@ -24,11 +33,11 @@ public class AjaxResponseBody {
         this.map = map;
     }
 
-    public List getResult() {
-        return result;
+    public List getListOfString() {
+        return listOfString;
     }
 
-    public void setResult(List result) {
-        this.result = result;
+    public void setListOfString(List listOfString) {
+        this.listOfString = listOfString;
     }
 }

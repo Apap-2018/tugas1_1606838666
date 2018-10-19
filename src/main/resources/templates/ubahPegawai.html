@@ -16,31 +16,31 @@
         <div class="form-group row">
           <label for="namaPegawai" class="col-2 col-form-label">Nama</label>
           <div class="col-4">
-            <input type="text" class="form-control" id="namaPegawai">
+            <input type="text" class="form-control" id="namaPegawai" th:value="${pegawai.nama}">
           </div>
         </div>
         <div class="form-group row">
           <label for="tempatLahir" class="col-2 col-form-label">Tempat Lahir</label>
           <div class="col-4">
-            <input type="text" class="form-control" id="tempatLahir">
+            <input type="text" class="form-control" id="tempatLahir" th:value="${pegawai.tempatLahir}">
           </div>
         </div>
         <div class="form-group row">
           <label for="tanggalLahir" class="col-2 col-form-label">Tanggal Lahir</label>
           <div class="col-4">
-            <input type="date" class="form-control" id="tanggalLahir">
+            <input type="date" class="form-control" id="tanggalLahir" th:value="${pegawai.tanggalLahir}">
           </div>
         </div>
         <div class="form-group row">
           <label for="tahunMasuk" class="col-2 col-form-label">Tahun Masuk</label>
           <div class="col-4">
-            <input type="number" class="form-control" id="tahunMasuk">
+            <input type="number" class="form-control" id="tahunMasuk" th:value="${pegawai.tahunMasuk}">
           </div>
         </div>
         <div class="form-group row">
           <label for="provinsi" class="col-2 col-form-label">Provinsi</label>
           <div class="col-4">
-            <select class="form-control" id="provinsi">
+            <select class="form-control" id="provinsi" th:value="${pegawai.instansi.provinsi.nama}">
               <option th:each="provinsi : ${listProvinsi}" th:text="${provinsi.nama}" th:value="${provinsi.nama}"></option>
             </select>
           </div>
@@ -56,7 +56,7 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Jabatan</label>
           <div class="col-4" id="jabatan-section">
-            <select class="form-control" id="jabatan1">
+            <select th:each="jabatanPegawai, iterStats : ${pegawai.listJabatan}" class="form-control" th:id="'jabatan' + ${iterStats.count}" th:value="${jabatanPegawai.jabatan.nama}">
 
             </select>
           </div>
@@ -80,13 +80,14 @@
             url: "/jabatan/get",
             cache: false,
             success : function (response) {
-              console.log(response);
+              console.log(response.listOfString);
               for (var i = 0; i < response.listOfString.length; i++) {
+                var jabatan = response.listOfString[i];
                 $('select[id^="jabatan"]').filter(
                   function () {
                     return this.id.match(/\d+$/);
                 }).append(
-                  `<option th:value=${response.listOfString[i]}>${response.listOfString[i]}</option>`
+                  "<option th:value=" + jabatan + ">" + jabatan + "</option>"
                 );
               };
             },
@@ -153,7 +154,6 @@
             data: JSON.stringify(params),
             cache: false,
             success : function (response) {
-              window.location.href = "/pegawai/berhasil/tambah?nip=" + response.message;
             },
         });
       })
