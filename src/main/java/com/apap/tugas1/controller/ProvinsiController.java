@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class ProvinsiController {
             listNamaInstansi.add(instansi.getNama());
         }
 
-        result.setMessage(data);
+        result.setMap(data);
         result.setResult(listNamaInstansi);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

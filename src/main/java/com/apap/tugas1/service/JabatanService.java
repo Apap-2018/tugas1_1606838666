@@ -11,4 +11,5 @@ public interface JabatanService {
     List<JabatanModel> getAllJabatan();
     Optional<JabatanModel> getJabatanById(BigInteger id);
     void editJabatan(JabatanModel jabatan);
+    void deleteJabatan(BigInteger id);
 }

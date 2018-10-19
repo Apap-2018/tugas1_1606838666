@@ -28,6 +28,12 @@
         <a th:href="@{'/jabatan/ubah?idJabatan=' + ${jabatan.id}}" class="btn btn-warning" style="margin-right: 2%;">Ubah</a>
         <a id="button-hapus" class="btn btn-danger">Hapus</a>
       </div>
+
+      <form id="form-hapus-jabatan" th:action="@{/jabatan/hapus}" method="POST" hidden>
+        <input name="id" th:value="${jabatan.id}" hidden></input>
+        <input name="nama" th:value="${jabatan.nama}" hidden></input>
+      </form>
+
     </div>
 
     <script type="text/javascript">
@@ -35,10 +41,14 @@
         $.ajax({
             method: "GET",
             contentType: "application/json",
-            url: `/jabatan/cek/hapus/${$("id-jabatan").html()}`,
+            url: `/jabatan/cek/hapus/${$("#id-jabatan").html()}`,
             cache: false,
             success : function (response) {
-
+              if (response.message == "false") {
+                alert("Jabatan tidak dapat dihapus karena terdapat pegawai dengan jabatan ini");
+              } else {
+                document.getElementById("form-hapus-jabatan").submit();
+              }
             },
         });
       });

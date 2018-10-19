@@ -4,15 +4,24 @@ import java.util.List;
 import java.util.Map;
 
 public class AjaxResponseBody {
-    Map message;
-    List<String> result;
+    private Map map;
+    private List<String> result;
+    private String message;
 
-    public Map getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Map message) {
+    public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 
     public List getResult() {

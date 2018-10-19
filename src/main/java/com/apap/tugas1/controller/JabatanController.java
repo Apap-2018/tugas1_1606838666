@@ -2,6 +2,8 @@ package com.apap.tugas1.controller;
 
 import com.apap.tugas1.model.AjaxResponseBody;
 import com.apap.tugas1.model.JabatanModel;
+import com.apap.tugas1.model.JabatanPegawaiModel;
+import com.apap.tugas1.service.JabatanPegawaiService;
 import com.apap.tugas1.service.JabatanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class JabatanController {
     @Autowired
     private JabatanService jabatanService;
+
+    @Autowired
+    private JabatanPegawaiService jabatanPegawaiService;
 
     @RequestMapping(value = "/jabatan/tambah", method = RequestMethod.GET)
     public String tambahJabatan(Model model) {
@@ -68,9 +73,21 @@ public class JabatanController {
     }
 
     @RequestMapping(value = "/jabatan/cek/hapus/{id_jabatan}", method = RequestMethod.GET)
-    public ResponseEntity<Object> cekHapusJabatan(@PathVariable String id_jabatan, Model model) {
+    public ResponseEntity<Object> cekHapusJabatan(@PathVariable String id_jabatan) {
+        ArrayList<JabatanPegawaiModel> listJabatanPegawai = jabatanPegawaiService.findAllByJabatan(jabatanService.getJabatanById(new BigInteger(id_jabatan)).get());
+        AjaxResponseBody result = new AjaxResponseBody();
 
-        model.addAttribute("pageTitle", "Detail Jabatan");
+        Boolean bisaDihapus = listJabatanPegawai.size() <= 0;
+        result.setMessage(bisaDihapus.toString());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/jabatan/hapus", method = RequestMethod.POST)
+    public String hapusJabatan(@RequestParam String id, @RequestParam String nama, Model model) {
+        jabatanService.deleteJabatan(new BigInteger(id));
+
+        model.addAttribute("nama", nama);
+        return "jabatanDeleted";
     }
 
     @RequestMapping(value = "/jabatan/get", method = RequestMethod.GET)
