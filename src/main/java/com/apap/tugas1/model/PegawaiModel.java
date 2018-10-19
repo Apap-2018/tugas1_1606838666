@@ -34,7 +34,6 @@ public class PegawaiModel{
     private String tempatLahir;
 
     @NotNull
-    @Size(max = 255)
     @Column(name = "tanggal_lahir", nullable = false)
     private Date tanggalLahir;
 
