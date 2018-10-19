@@ -1,8 +1,10 @@
 package com.apap.tugas1.controller;
 
 import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.PegawaiModel;
 import com.apap.tugas1.model.ProvinsiModel;
+import com.apap.tugas1.service.JabatanService;
 import com.apap.tugas1.service.PegawaiService;
 import com.apap.tugas1.service.ProvinsiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,14 @@ public class PegawaiController {
 	@Autowired
 	private ProvinsiService provinsiService;
 
+	@Autowired
+	private JabatanService jabatanService;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
-		
+		List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
+
+		model.addAttribute("listJabatan", listJabatan);
 		model.addAttribute("pageTitle", "Home Page");
 		return "home";
 	}

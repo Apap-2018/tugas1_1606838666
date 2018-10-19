@@ -21,6 +21,17 @@
         <br>
         <button type="submit" class="btn btn-primary" id="lihat">Lihat</button>
       </form>
+      <hr class="horizontal-line">
+
+      <h3>Lihat Detail Jabatan</h3>
+      <h5>Pilih Jabatan</h5>
+      <form th:action="@{'/jabatan/view'}" method="GET">
+        <select name="idJabatan">
+          <option th:each="jabatan : ${listJabatan}" th:text="${jabatan.nama}" th:value="${jabatan.id}"></option>
+        </select>
+        <br>
+        <button type="submit" class="btn btn-primary" id="lihat">Lihat</button>
+      </form>
     </div>
   </body>
 </html>

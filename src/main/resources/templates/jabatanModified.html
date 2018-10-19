@@ -10,9 +10,9 @@
     <nav th:replace="fragments/fragment :: navbar"></nav>
 
     <div class="container-fluid">
-      <h3 th:text="'Jabatan ' + ${jabatan.nama} + ' berhasil ditambah'"></h3>
+      <h3 th:text="'Jabatan ' + ${jabatan.nama} + ' berhasil di' + ${action}"></h3>
 
-      <a th:href="@{/jabatan/tambah}" class="btn btn-danger">Back</a>
+      <a th:href="@{'/jabatan/view/' + ${jabatan.id}}" class="btn btn-danger">Back</a>
     </div>
   </body>
 </html>

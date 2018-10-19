@@ -22,6 +22,7 @@ public class JabatanController {
 
     @RequestMapping(value = "/jabatan/tambah", method = RequestMethod.GET)
     public String tambahJabatan(Model model) {
+        model.addAttribute("title", "tambah");
         model.addAttribute("jabatan", new JabatanModel());
         return "formJabatan";
     }
@@ -31,7 +32,8 @@ public class JabatanController {
         jabatanService.addJabatan(jabatan);
 
         model.addAttribute("jabatan", jabatan);
-        return "jabatanAdded";
+        model.addAttribute("action", "tambah");
+        return "jabatanModified";
     }
 
     @RequestMapping(value = {"/jabatan/view", "/jabatan/view/{id_jabatan}"}, method = RequestMethod.GET)
@@ -45,6 +47,30 @@ public class JabatanController {
         model.addAttribute("pageTitle", "Detail Jabatan");
         model.addAttribute("jabatan", jabatan);
         return "viewJabatan";
+    }
+
+    @RequestMapping(value = "/jabatan/ubah", method = RequestMethod.GET)
+    public String ubahJabatan(Model model, @RequestParam String idJabatan) {
+        JabatanModel jabatan = jabatanService.getJabatanById(new BigInteger(idJabatan)).get();
+
+        model.addAttribute("title", "ubah");
+        model.addAttribute("jabatan", jabatan);
+        return "formJabatan";
+    }
+
+    @RequestMapping(value = "/jabatan/ubah", method = RequestMethod.POST)
+    public String submitPerubahanJabatan(Model model, @ModelAttribute JabatanModel jabatan) {
+        jabatanService.editJabatan(jabatan);
+
+        model.addAttribute("jabatan", jabatan);
+        model.addAttribute("action", "ubah");
+        return "jabatanModified";
+    }
+
+    @RequestMapping(value = "/jabatan/cek/hapus/{id_jabatan}", method = RequestMethod.GET)
+    public ResponseEntity<Object> cekHapusJabatan(@PathVariable String id_jabatan, Model model) {
+
+        model.addAttribute("pageTitle", "Detail Jabatan");
     }
 
     @RequestMapping(value = "/jabatan/get", method = RequestMethod.GET)
