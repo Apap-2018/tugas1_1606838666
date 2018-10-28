@@ -1,14 +1,15 @@
 package com.apap.tugas1.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 @Entity
 @Table(name = "jabatan_pegawai")
-public class JabatanPegawaiModel {
+public class JabatanPegawaiModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_jabatan")
@@ -18,11 +19,11 @@ public class JabatanPegawaiModel {
     @JoinColumn(name = "id_pegawai")
     private PegawaiModel pegawai;
 
-    public BigInteger getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(long id) {
         this.id = id;
     }
 

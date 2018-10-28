@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.math.BigInteger;
@@ -66,6 +64,7 @@ public class PegawaiController {
 	public String lihatPegawai(Model model) {
 		List<ProvinsiModel> listProvinsi = provinsiService.getAllProvinsi();
 
+		model.addAttribute("isCariPegawai", true);
 		model.addAttribute("listProvinsi", listProvinsi);
 		model.addAttribute("pageTitle", "Detail Pegawai");
 		return "cariPegawai";
@@ -106,7 +105,7 @@ public class PegawaiController {
 
 	@RequestMapping(value = "/pegawai/termuda-tertua", method = RequestMethod.GET)
 	public String lihatPegawaiTermudaTertua(@RequestParam String id_instansi, Model model) {
-		InstansiModel instansi = instansiService.getInstansiById(new BigInteger(id_instansi));
+		InstansiModel instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
 		List<PegawaiModel> pegawaiInstansi = pegawaiService.findAllByInstansiOrderByTanggalLahir(instansi);
 		PegawaiModel pegawaiTertua = pegawaiInstansi.get(0);
 		PegawaiModel pegawaiTermuda = pegawaiInstansi.get(pegawaiInstansi.size()-1);
@@ -119,24 +118,102 @@ public class PegawaiController {
 	
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.GET)
 	public String tambahPegawai(Model model) {
+//		PegawaiModel pegawai = new PegawaiModel();
+//		List<JabatanPegawaiModel> dummyList = new ArrayList<>();
+//		JabatanPegawaiModel dummyJabatanPegawai = new JabatanPegawaiModel();
+//		dummyJabatanPegawai.setPegawai(pegawai);
+//		dummyList.add(dummyJabatanPegawai);
+//		pegawai.setListJabatan(dummyList);
+		PegawaiModel pegawai = new PegawaiModel();
+		pegawai.setListJabatan(new ArrayList<JabatanPegawaiModel>());
+		pegawai.getListJabatan().add(new JabatanPegawaiModel());
 
+		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
-		return "addPegawai";
+		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
+		model.addAttribute("isTambahPegawai", true);
+		return "formPegawai";
+	}
+
+	@RequestMapping(value="/pegawai/tambah", method = RequestMethod.POST, params= {"addJabatanRow"})
+	public String addRow(@ModelAttribute PegawaiModel pegawai,
+						 BindingResult bindingResult,
+						 Model model) {
+		if (pegawai.getListJabatan() == null) {
+			pegawai.setListJabatan(new ArrayList<JabatanPegawaiModel>());
+		}
+		pegawai.getListJabatan().add(new JabatanPegawaiModel());
+
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("pageTitle", "Tambah Pegawai");
+		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
+		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
+		model.addAttribute("isTambahPegawai", true);
+
+		return "formPegawai";
 	}
 
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	public ResponseEntity<Object> submitPegawai(
+	public String submitPegawai(
 			Model model,
-			@RequestBody Map<String, Object> data
+			@ModelAttribute PegawaiModel pegawai,
+			@RequestParam String id_instansi
 			) {
-		PegawaiModel newPegawai = new PegawaiModel();
+		InstansiModel instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
+		pegawai.setInstansi(instansi);
+
+		String tanggalLahir = pegawai.getTanggalLahir().toString();
+		String[] kodeTanggal = tanggalLahir.split("-");
+
+		List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+		String urutan = "01";
+		try {
+			urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
+		} catch (Exception e) {
+
+		}
+		String nip = id_instansi + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + pegawai.getTahunMasuk() + urutan;
+
+		pegawai.setNip(nip);
+		pegawaiService.addPegawai(pegawai);
+
+		PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
+		System.out.println(pegawaiAdded.getListJabatan());
+
+		for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
+			jabatan.setPegawai(pegawaiAdded);
+			System.out.println(jabatan.getJabatan().getNama());
+			System.out.println(jabatan.getPegawai().getNama());
+			jabatanPegawaiService.addJabatanPegawai(jabatan);
+			System.out.println(jabatan.getId());
+		}
+
+
+		model.addAttribute("pesan", "ditambahkan");
+		model.addAttribute("nip", nip);
+
+		return "submitPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.GET)
+	public String updatePegawai(@RequestParam String nip, Model model) {
+		PegawaiModel pegawai = pegawaiService.findPegawaiByNIP(nip).get();
+
+		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
+		model.addAttribute("pegawai", pegawai);
+		return "ubahPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
+	public ResponseEntity<Object> submitUpdatePegawai(Model model, @RequestBody Map<String, Object> data) {
+		PegawaiModel pegawai = new PegawaiModel();
 		ProvinsiModel provinsi = provinsiService.getProvinsiByNama(data.get("provinsi").toString()).get();
 		InstansiModel instansiObject = null;
 
 		String kodeInstansi = "";
 		for (InstansiModel instansi: provinsi.getListInstansi()) {
 			if (instansi.getNama().equals(data.get("namaInstansi").toString())) {
-				kodeInstansi = instansi.getId().toString().substring(2);
+				kodeInstansi = Long.toString(instansi.getId()).substring(2);
 				instansiObject = instansi;
 			}
 		}
@@ -153,7 +230,7 @@ public class PegawaiController {
 		String[] kodeTanggal = data.get("tanggalLahir").toString().split("-");
 		List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(myDate, data.get("tahunMasuk").toString());
 		String urutan = (pegawaiMirip.size() < 10) ? "0" + Integer.toString(pegawaiMirip.size() + 1) : Integer.toString(pegawaiMirip.size() + 1);
-		String nip = provinsi.getId().toString() + kodeInstansi + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + data.get("tahunMasuk").toString() + urutan;
+		String nip = Long.toString(provinsi.getId()) + kodeInstansi + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + data.get("tahunMasuk").toString() + urutan;
 
 		String a = data.get("listJabatan").toString();
 		a = a.replace("[", "");
@@ -161,54 +238,35 @@ public class PegawaiController {
 		a = a.trim();
 		String[] listNamaJabatan = a.split(",");
 		List<JabatanPegawaiModel> listJabatanPegawai = new ArrayList<>();
+
+
 		for (String namaJabatan: listNamaJabatan) {
 			JabatanModel jabatanDitambah = jabatanService.findByNama(namaJabatan);
 			JabatanPegawaiModel jabatanPegawaiModelDitambah = new JabatanPegawaiModel();
 			jabatanPegawaiModelDitambah.setJabatan(jabatanDitambah);
-			jabatanPegawaiModelDitambah.setPegawai(newPegawai);
+			jabatanPegawaiModelDitambah.setPegawai(pegawai);
 			listJabatanPegawai.add(jabatanPegawaiModelDitambah);
 		}
 
-		newPegawai.setNip(nip);
-		newPegawai.setNama(data.get("namaPegawai").toString());
-		newPegawai.setTempatLahir(data.get("tempatLahir").toString());
-		newPegawai.setTanggalLahir(myDate);
-		newPegawai.setTahunMasuk(data.get("tahunMasuk").toString());
-		newPegawai.setInstansi(instansiObject);
-//		newPegawai.setListJabatan(listJabatanPegawai);
+		pegawai.setNip(nip);
+		pegawai.setNama(data.get("namaPegawai").toString());
+		pegawai.setTempatLahir(data.get("tempatLahir").toString());
+//		pegawai.setTanggalLahir(myDate);
+		pegawai.setTahunMasuk(data.get("tahunMasuk").toString());
+		pegawai.setInstansi(instansiObject);
 
-		pegawaiService.addPegawai(newPegawai);
-
-		model.addAttribute("pesan", "ditambahkan");
-		model.addAttribute("nip", nip);
+		pegawaiService.editPegawai(pegawai);
 
 		AjaxResponseBody result = new AjaxResponseBody();
 		result.setMessage(nip);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/pegawai/berhasil/tambah", method = RequestMethod.GET)
-	public String pegawaiDitambah(@RequestParam String nip, Model model) {
+	@RequestMapping(value = "/pegawai/berhasil/ubah", method = RequestMethod.GET)
+	public String pegawaiDiubah(@RequestParam String nip, Model model) {
 		model.addAttribute("nip", nip);
-		model.addAttribute("pesan", "ditambah");
-		model.addAttribute("pageTitle", "Detail Pegawai");
-		return "submitPegawai";
-	}
-	
-	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.GET)
-	public String updatePegawai(@RequestParam String nip, Model model) {
-		PegawaiModel pegawai = pegawaiService.findPegawaiByNIP(nip).get();
-
-		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
-		model.addAttribute("pegawai", pegawai);
-		return "ubahPegawai";
-	}
-	
-	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
-	public String submitUpdatePegawai(Model model) {
-		
 		model.addAttribute("pesan", "diubah");
-		model.addAttribute("nip", "1234567890");
+		model.addAttribute("pageTitle", "Detail Pegawai");
 		return "submitPegawai";
 	}
 

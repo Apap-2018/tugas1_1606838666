@@ -7,16 +7,17 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "pegawai")
-public class PegawaiModel{
+public class PegawaiModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private long id;
 
     @NotNull
     @Size(max = 255)
@@ -51,11 +52,11 @@ public class PegawaiModel{
     @OneToMany(mappedBy = "pegawai", fetch = FetchType.LAZY,  cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<JabatanPegawaiModel> listJabatan;
 
-    public BigInteger getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(long id) {
         this.id = id;
     }
 

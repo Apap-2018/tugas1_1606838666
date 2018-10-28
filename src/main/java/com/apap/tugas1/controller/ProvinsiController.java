@@ -25,15 +25,16 @@ public class ProvinsiController {
     public ResponseEntity<Object> getInstansi(@RequestBody Map<String, String> data) {
         AjaxResponseBody result = new AjaxResponseBody();
         ProvinsiModel provinsi = provinsiService.getProvinsiByNama(data.get("nama")).get();
-        List<String> listNamaInstansi = new ArrayList<>();
-        List<InstansiModel> listInstansi = provinsi.getListInstansi();
 
-        for (InstansiModel instansi: listInstansi) {
-            listNamaInstansi.add(instansi.getNama());
+        List<InstansiModel> listInstansi = new ArrayList<>();
+        for (InstansiModel instansi: provinsi.getListInstansi()) {
+            InstansiModel addInstansi = new InstansiModel(instansi.getNama(), instansi.getDeskripsi(), provinsi);
+            addInstansi.setId(instansi.getId());
+            listInstansi.add(addInstansi);
         }
 
         result.setMap(data);
-        result.setListOfString(listNamaInstansi);
+        result.setListOfInstansiModel(listInstansi);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

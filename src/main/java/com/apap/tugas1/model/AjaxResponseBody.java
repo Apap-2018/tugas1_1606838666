@@ -7,7 +7,16 @@ public class AjaxResponseBody {
     private Map map;
     private List<String> listOfString;
     private List<PegawaiModel> listOfPegawaiModel;
+    private List<InstansiModel> listOfInstansiModel;
     private String message;
+
+    public List<InstansiModel> getListOfInstansiModel() {
+        return listOfInstansiModel;
+    }
+
+    public void setListOfInstansiModel(List<InstansiModel> listOfInstansiModel) {
+        this.listOfInstansiModel = listOfInstansiModel;
+    }
 
     public String getMessage() {
         return message;

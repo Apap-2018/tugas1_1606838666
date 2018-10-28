@@ -56,7 +56,12 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Jabatan</label>
           <div class="col-4" id="jabatan-section">
-            <select th:each="jabatanPegawai, iterStats : ${pegawai.listJabatan}" class="form-control" th:id="'jabatan' + ${iterStats.count}" th:value="${jabatanPegawai.jabatan.nama}">
+            <select
+              th:each="jabatanPegawai, iterStats : ${pegawai.listJabatan}"
+              class="form-control"
+              th:id="'jabatan' + ${iterStats.count}"
+              th:value="${jabatanPegawai.jabatan.nama}"
+            >
 
             </select>
           </div>
@@ -150,10 +155,11 @@
         $.ajax({
             method: "POST",
             contentType: "application/json",
-            url: "/pegawai/tambah",
+            url: "/pegawai/ubah",
             data: JSON.stringify(params),
             cache: false,
             success : function (response) {
+              window.location.href = "/pegawai/berhasil/ubah?nip=" + response.message;
             },
         });
       })

@@ -9,8 +9,8 @@ import java.util.Optional;
 public interface JabatanService {
     void addJabatan(JabatanModel jabatan);
     List<JabatanModel> getAllJabatan();
-    Optional<JabatanModel> getJabatanById(BigInteger id);
+    Optional<JabatanModel> getJabatanById(long id);
     void editJabatan(JabatanModel jabatan);
-    void deleteJabatan(BigInteger id);
+    void deleteJabatan(long id);
     JabatanModel findByNama(String nama);
 }

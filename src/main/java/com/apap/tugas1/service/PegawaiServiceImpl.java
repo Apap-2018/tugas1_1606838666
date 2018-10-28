@@ -52,4 +52,16 @@ public class PegawaiServiceImpl implements PegawaiService {
     public List<PegawaiModel> findAllByListJabatan(JabatanPegawaiModel jabatanPegawaiModel) {
         return pegawaiDB.findAllByListJabatan(jabatanPegawaiModel);
     }
+
+    @Override
+    public void editPegawai(PegawaiModel pegawai) {
+        PegawaiModel updatedPegawai = pegawaiDB.findById(pegawai.getId()).get();
+        updatedPegawai.setNama(pegawai.getNama());
+        updatedPegawai.setTempatLahir(pegawai.getTempatLahir());
+        updatedPegawai.setTanggalLahir(pegawai.getTanggalLahir());
+        updatedPegawai.setTahunMasuk(pegawai.getTahunMasuk());
+        updatedPegawai.setInstansi(pegawai.getInstansi());
+        updatedPegawai.setListJabatan(pegawai.getListJabatan());
+        pegawaiDB.save(updatedPegawai);
+    }
 }

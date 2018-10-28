@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 public interface InstansiService {
-    InstansiModel getInstansiById(BigInteger id);
+    InstansiModel getInstansiById(long id);
     InstansiModel findByNama(String nama);
     List<InstansiModel> findAllByProvinsi(ProvinsiModel provinsi);
 

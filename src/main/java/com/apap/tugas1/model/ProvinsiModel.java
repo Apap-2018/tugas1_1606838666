@@ -3,15 +3,16 @@ package com.apap.tugas1.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
 @Entity
 @Table(name = "provinsi")
-public class ProvinsiModel {
+public class ProvinsiModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private long id;
 
     @NotNull
     @Size(max = 255)
@@ -25,11 +26,11 @@ public class ProvinsiModel {
     @OneToMany(mappedBy = "provinsi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<InstansiModel> listInstansi;
 
-    public BigInteger getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(long id) {
         this.id = id;
     }
 

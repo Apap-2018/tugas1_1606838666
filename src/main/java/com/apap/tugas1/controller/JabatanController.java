@@ -27,6 +27,7 @@ public class JabatanController {
     public String tambahJabatan(Model model) {
         model.addAttribute("title", "tambah");
         model.addAttribute("jabatan", new JabatanModel());
+        model.addAttribute("isTambahJabatan", true);
         return "formJabatan";
     }
 
@@ -45,7 +46,7 @@ public class JabatanController {
             @PathVariable Optional<String> id_jabatan,
             @RequestParam (value = "idJabatan", required = false) String idJabatan
             ) {
-        JabatanModel jabatan = jabatanService.getJabatanById((id_jabatan.isPresent()) ? new BigInteger(id_jabatan.get()) : new BigInteger(idJabatan)).get();
+        JabatanModel jabatan = jabatanService.getJabatanById((id_jabatan.isPresent()) ? Long.valueOf(id_jabatan.get()) : Long.valueOf(idJabatan)).get();
 
         model.addAttribute("pageTitle", "Detail Jabatan");
         model.addAttribute("jabatan", jabatan);
@@ -55,6 +56,7 @@ public class JabatanController {
     public String viewAllJabatan(Model model) {
         List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
 
+        model.addAttribute("isLihatSemuaJabatan", true);
         model.addAttribute("pageTitle", "Detail Jabatan");
         model.addAttribute("listJabatan", listJabatan);
         return "allJabatan";
@@ -62,7 +64,7 @@ public class JabatanController {
 
     @RequestMapping(value = "/jabatan/ubah", method = RequestMethod.GET)
     public String ubahJabatan(Model model, @RequestParam String idJabatan) {
-        JabatanModel jabatan = jabatanService.getJabatanById(new BigInteger(idJabatan)).get();
+        JabatanModel jabatan = jabatanService.getJabatanById(Long.valueOf(idJabatan)).get();
 
         model.addAttribute("title", "ubah");
         model.addAttribute("jabatan", jabatan);
@@ -80,7 +82,7 @@ public class JabatanController {
 
     @RequestMapping(value = "/jabatan/cek/hapus/{id_jabatan}", method = RequestMethod.GET)
     public ResponseEntity<Object> cekHapusJabatan(@PathVariable String id_jabatan) {
-        ArrayList<JabatanPegawaiModel> listJabatanPegawai = jabatanPegawaiService.findAllByJabatan(jabatanService.getJabatanById(new BigInteger(id_jabatan)).get());
+        ArrayList<JabatanPegawaiModel> listJabatanPegawai = jabatanPegawaiService.findAllByJabatan(jabatanService.getJabatanById(Long.valueOf(id_jabatan)).get());
         AjaxResponseBody result = new AjaxResponseBody();
 
         Boolean bisaDihapus = listJabatanPegawai.size() <= 0;
@@ -90,7 +92,7 @@ public class JabatanController {
 
     @RequestMapping(value = "/jabatan/hapus", method = RequestMethod.POST)
     public String hapusJabatan(@RequestParam String id, @RequestParam String nama, Model model) {
-        jabatanService.deleteJabatan(new BigInteger(id));
+        jabatanService.deleteJabatan(Long.valueOf(id));
 
         model.addAttribute("nama", nama);
         return "jabatanDeleted";

@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface PegawaiService {
     Optional<PegawaiModel> findPegawaiByNIP(String nip);
     void addPegawai(PegawaiModel pegawai);
+    void editPegawai(PegawaiModel pegawai);
     List<PegawaiModel> findAllByTanggalLahirAndTahunMasuk(Date tanggalLahir, String tahunMasuk);
     List<PegawaiModel> findAllByInstansiOrderByTanggalLahir(InstansiModel instansi);
     List<PegawaiModel> getAll();

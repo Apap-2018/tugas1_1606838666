@@ -27,7 +27,7 @@ public class JabatanServiceImpl implements JabatanService {
     }
 
     @Override
-    public Optional<JabatanModel> getJabatanById(BigInteger id) {
+    public Optional<JabatanModel> getJabatanById(long id) {
         return jabatanDB.findById(id);
     }
 
@@ -41,7 +41,7 @@ public class JabatanServiceImpl implements JabatanService {
     }
 
     @Override
-    public void deleteJabatan(BigInteger id) {
+    public void deleteJabatan(long id) {
         jabatanDB.deleteById(id);
     }
 
