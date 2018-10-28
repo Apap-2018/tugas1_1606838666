@@ -153,7 +153,7 @@ public class PegawaiController {
 		return "formPegawai";
 	}
 
-	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST, params= {"addPegawai"})
 	public String submitPegawai(
 			Model model,
 			@ModelAttribute PegawaiModel pegawai,
@@ -178,17 +178,22 @@ public class PegawaiController {
 		pegawaiService.addPegawai(pegawai);
 
 		PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
-		System.out.println(pegawaiAdded.getListJabatan());
+		List<JabatanPegawaiModel> jabatanModelModified = new ArrayList<>();
 
 		for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
-			jabatan.setPegawai(pegawaiAdded);
-			System.out.println(jabatan.getJabatan().getNama());
-			System.out.println(jabatan.getPegawai().getNama());
-			jabatanPegawaiService.addJabatanPegawai(jabatan);
-			System.out.println(jabatan.getId());
+			if (jabatan == null) {
+				System.out.println("NULL!");
+			} else {
+				jabatan.setPegawai(pegawaiAdded);
+				System.out.println(jabatan.getJabatan().getNama());
+				System.out.println(jabatan.getPegawai().getNama());
+				System.out.println(jabatan.getId());
+				jabatanModelModified.add(jabatan);
+			}
 		}
-
-
+		for (JabatanPegawaiModel jabatan: jabatanModelModified) {
+				jabatanPegawaiService.addJabatanPegawai(jabatan);
+		}
 		model.addAttribute("pesan", "ditambahkan");
 		model.addAttribute("nip", nip);
 
