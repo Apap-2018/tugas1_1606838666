@@ -25,7 +25,7 @@ public class JabatanController {
 
     @RequestMapping(value = "/jabatan/tambah", method = RequestMethod.GET)
     public String tambahJabatan(Model model) {
-        model.addAttribute("title", "tambah");
+        model.addAttribute("method", "tambah");
         model.addAttribute("jabatan", new JabatanModel());
         model.addAttribute("isTambahJabatan", true);
         return "formJabatan";
@@ -66,13 +66,14 @@ public class JabatanController {
     public String ubahJabatan(Model model, @RequestParam String idJabatan) {
         JabatanModel jabatan = jabatanService.getJabatanById(Long.valueOf(idJabatan)).get();
 
-        model.addAttribute("title", "ubah");
+        model.addAttribute("method", "ubah");
         model.addAttribute("jabatan", jabatan);
         return "formJabatan";
     }
 
     @RequestMapping(value = "/jabatan/ubah", method = RequestMethod.POST)
     public String submitPerubahanJabatan(Model model, @ModelAttribute JabatanModel jabatan) {
+        System.out.println(jabatan.getId());
         jabatanService.editJabatan(jabatan);
 
         model.addAttribute("jabatan", jabatan);

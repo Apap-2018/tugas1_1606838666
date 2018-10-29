@@ -10,9 +10,10 @@
     <nav th:replace="fragments/fragment :: navbar"></nav>
 
     <div class="container-fluid">
-      <h3 class="title">Tambah Jabatan</h3>
+      <h3 class="title" th:text="${method} + ' Jabatan'" style="text-transform: capitalize;"></h3>
 
-      <form th:action="@{/jabatan/tambah}" th:object="${jabatan}" method="POST">
+      <form th:action="@{'/jabatan/' + ${method}}" th:object="${jabatan}" method="POST">
+        <input type="hidden" th:value="*{id}" th:field="*{id}">
         <div class="form-group row">
           <label for="nama" class="col-2 col-form-label">Nama</label>
           <div class="col-4">

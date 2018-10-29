@@ -70,7 +70,7 @@ public class PegawaiController {
 
 		model.addAttribute("isCariPegawai", true);
 		model.addAttribute("listProvinsi", listProvinsi);
-		model.addAttribute("pageTitle", "Detail Pegawai");
+		model.addAttribute("pageTitle", "Cari Pegawai");
 		return "cariPegawai";
 	}
 
@@ -114,7 +114,7 @@ public class PegawaiController {
 		PegawaiModel pegawaiTertua = pegawaiInstansi.get(0);
 		PegawaiModel pegawaiTermuda = pegawaiInstansi.get(pegawaiInstansi.size()-1);
 
-		model.addAttribute("pageTitle", "Detail Pegawai");
+		model.addAttribute("pageTitle", "Pegawai Termuda-Tertua");
 		model.addAttribute("pegawaiTermuda", pegawaiTermuda);
 		model.addAttribute("pegawaiTertua", pegawaiTertua);
 		return "pegawaiTermudaTertua";
@@ -130,6 +130,7 @@ public class PegawaiController {
 		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
 		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
 		model.addAttribute("method", "tambah");
+		model.addAttribute("pageTitle", "Tambah Pegawai");
 		model.addAttribute("isTambahPegawai", true);
 		return "formPegawai";
 	}
@@ -209,11 +210,13 @@ public class PegawaiController {
 				jabatanPegawaiService.addJabatanPegawai(jabatan);
 			}
 
+			model.addAttribute("pageTitle", "Pegawai Ditambah");
 			model.addAttribute("method", "tambah");
 			model.addAttribute("pesan", "ditambahkan");
 			model.addAttribute("nip", nip);
 			return "submitPegawai";
 		} catch (Exception e) {
+			model.addAttribute("pageTitle", "Tambah Pegawai");
 			model.addAttribute("errorFlag", "true");
 			return "formPegawai";
 		}
@@ -231,7 +234,7 @@ public class PegawaiController {
 				System.out.println("=====");
 			}
 		}
-
+		model.addAttribute("pageTitle", "Ubah Pegawai");
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
 		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
@@ -251,7 +254,7 @@ public class PegawaiController {
 		pegawai.setInstansi(pegawaiFromDb.getInstansi());
 
 		model.addAttribute("pegawai", pegawai);
-		model.addAttribute("pageTitle", "Tambah Pegawai");
+		model.addAttribute("pageTitle", "Ubah Pegawai");
 		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
 		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
 		model.addAttribute("method", "ubah");
@@ -268,7 +271,7 @@ public class PegawaiController {
 		pegawai.getListJabatan().remove(Integer.valueOf(req.getParameter("removeRow")).intValue());
 
 		model.addAttribute("pegawai", pegawai);
-		model.addAttribute("pageTitle", "Tambah Pegawai");
+		model.addAttribute("pageTitle", "Ubah Pegawai");
 		model.addAttribute("listProvinsi", provinsiService.getAllProvinsi());
 		model.addAttribute("listAllJabatan", jabatanService.getAllJabatan());
 		model.addAttribute("method", "ubah");
@@ -326,12 +329,14 @@ public class PegawaiController {
 			for (JabatanPegawaiModel jabatan: jabatanModelModified) {
 				jabatanPegawaiService.addJabatanPegawai(jabatan);
 			}
+			model.addAttribute("pageTitle", "Pegawai Diubah");
 			model.addAttribute("method", "ubah");
 			model.addAttribute("newNip", pegawai.getNip());
 			model.addAttribute("pesan", "diubah, NIP baru adalah ");
 			model.addAttribute("nip", oldNip);
 			return "submitPegawai";
 		} catch (Exception e) {
+			model.addAttribute("pageTitle", "Ubah Pegawai");
 			model.addAttribute("errorFlag", "true");
 			return "formPegawai";
 		}
