@@ -20,7 +20,11 @@ public class PegawaiServiceImpl implements PegawaiService {
 
     @Override
     public Optional<PegawaiModel> findPegawaiByNIP(String nip) {
-        return Optional.of(pegawaiDB.findByNip(nip));
+        try{
+            return Optional.of(pegawaiDB.findByNip(nip));
+        } catch (Exception e) {
+            return Optional.of(null);
+        }
     }
 
     @Override
@@ -54,14 +58,15 @@ public class PegawaiServiceImpl implements PegawaiService {
     }
 
     @Override
-    public void editPegawai(PegawaiModel pegawai) {
-        PegawaiModel updatedPegawai = pegawaiDB.findById(pegawai.getId()).get();
+    public void editPegawai(PegawaiModel pegawai, String oldNip) {
+        PegawaiModel updatedPegawai = pegawaiDB.findByNip(oldNip);
         updatedPegawai.setNama(pegawai.getNama());
         updatedPegawai.setTempatLahir(pegawai.getTempatLahir());
         updatedPegawai.setTanggalLahir(pegawai.getTanggalLahir());
         updatedPegawai.setTahunMasuk(pegawai.getTahunMasuk());
         updatedPegawai.setInstansi(pegawai.getInstansi());
         updatedPegawai.setListJabatan(pegawai.getListJabatan());
+        updatedPegawai.setNip(pegawai.getNip());
         pegawaiDB.save(updatedPegawai);
     }
 }

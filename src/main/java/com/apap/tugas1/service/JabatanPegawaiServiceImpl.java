@@ -2,6 +2,7 @@ package com.apap.tugas1.service;
 
 import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.JabatanPegawaiModel;
+import com.apap.tugas1.model.PegawaiModel;
 import com.apap.tugas1.repository.JabatanPegawaiDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class JabatanPegawaiServiceImpl implements JabatanPegawaiService {
     @Override
     public void addJabatanPegawai(JabatanPegawaiModel jabatanPegawaiModel) {
         jabatanPegawaiDB.save(jabatanPegawaiModel);
+    }
+
+    @Override
+    public void deleteByPegawai(PegawaiModel pegawai) {
+        jabatanPegawaiDB.deleteByPegawai(pegawai);
     }
 }

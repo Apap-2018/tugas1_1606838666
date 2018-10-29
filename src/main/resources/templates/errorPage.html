@@ -10,7 +10,7 @@
   <body>
     <nav th:replace="fragments/fragment :: navbar"></nav>
     <div class="container-fluid">
-      <h2>Halaman tidak ditemukan</h2>
+      <h2 th:text="${errorMessage}"></h2>
     </div>
   </body>
 </html>

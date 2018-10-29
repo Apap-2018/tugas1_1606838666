@@ -10,63 +10,72 @@
     <nav th:replace="fragments/fragment :: navbar"></nav>
 
     <div class="container-fluid">
-      <h3>Tambah Pegawai</h3>
+      <h3 th:text="${method} + ' Pegawai'" style="text-transform: capitalize;"></h3>
 
-      <form id="form-pegawai" th:action="@{/pegawai/tambah}" method="POST" th:object="${pegawai}">
+      <form id="form-pegawai" th:action="@{'/pegawai/' + ${method}}" method="POST" th:object="${pegawai}">
+        <input th:if="${method == 'ubah'}" type="hidden" th:field="*{nip}" th:value="*{nip}">
         <div class="form-group row">
           <label for="" class="col-2 col-form-label">Nama</label>
-          <div class="col-4">
+          <div class="col-8">
             <input type="text" class="form-control" id="" th:field="*{nama}">
           </div>
         </div>
         <div class="form-group row">
           <label for="" class="col-2 col-form-label">Tempat Lahir</label>
-          <div class="col-4">
+          <div class="col-8">
             <input type="text" class="form-control" id="" th:field="*{tempatLahir}">
           </div>
         </div>
         <div class="form-group row">
           <label for="" class="col-2 col-form-label">Tanggal Lahir</label>
-          <div class="col-4">
+          <div class="col-8">
             <input type="date" class="form-control" id="" th:field="*{tanggalLahir}">
           </div>
         </div>
         <div class="form-group row">
           <label for="" class="col-2 col-form-label">Tahun Masuk</label>
-          <div class="col-4">
+          <div class="col-8">
             <input type="number" class="form-control" id="" th:field="*{tahunMasuk}">
           </div>
         </div>
         <div class="form-group row">
-          <label for="" class="col-2 col-form-label">Provinsi</label>
-          <div class="col-4">
-            <select class="form-control" id="provinsi">
-              <option th:each="provinsi : ${listProvinsi}" th:text="${provinsi.nama}" th:value="${provinsi.nama}"></option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="" class="col-2 col-form-label">Nama Instansi</label>
-          <div class="col-4">
-            <select class="form-control" id="namaInstansi" name="id_instansi">
-
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
           <label class="col-2 col-form-label">Jabatan</label>
-          <div class="col-4" id="jabatan-section">
-            <span th:each="slotJabatan, rowStats: *{listJabatan}">
-              <select class="form-control" id="" th:field="*{listJabatan[__${rowStats.index}__].jabatan}" style="margin-top: 1.5%;">
+          <div class="col-8" id="jabatan-section">
+            <span th:each="slotJabatan, rowStats: *{listJabatan}" class="row" style="margin: 0; margin-top: 1.5%;">
+              <select class="form-control col-7" id="" th:field="*{listJabatan[__${rowStats.index}__].jabatan}" style="margin-right: 2%;">
                 <option th:each="jabatan : ${listAllJabatan}" th:value="${jabatan.id}" th:text="${jabatan.nama}"></option>
               </select>
+              <button type="submit" class="btn btn-danger col-4" name="removeRow"
+              th:value="${rowStats.index}" th:unless="${rowStats.index == 0}"
+              >
+              Hapus Jabatan
+            </button>
             </span>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-2"></div>
-          <div class="col-4">
+          <div class="col-8">
             <button type="submit" class="btn btn-primary" name="addJabatanRow">Tambah Jabatan Lainnya</button>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="" class="col-2 col-form-label">Provinsi</label>
+          <div th:class="${method == 'ubah'} ? 'col-8 row' : 'col-8'">
+            <select th:class="${method == 'ubah'} ? 'col-7 form-control' : 'form-control'" id="provinsi">
+              <option value="">Pilih Provinsi</option>
+              <option th:each="provinsi : ${listProvinsi}" th:text="${provinsi.nama}" th:value="${provinsi.nama}"></option>
+            </select>
+            <span th:if="${method == 'ubah'}" class="col-5" style="color: red;">Jika tidak ingin diganti, tidak perlu diisi</span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="" class="col-2 col-form-label">Nama Instansi</label>
+          <div th:class="${method == 'ubah'} ? 'col-8 row' : 'col-8'">
+            <select th:class="${method == 'ubah'} ? 'col-7 form-control' : 'form-control'" id="namaInstansi" name="id_instansi">
+
+            </select>
+            <span th:if="${method == 'ubah'}" class="col-5" style="color: red;">Jika tidak ingin diganti, tidak perlu diisi</span>
           </div>
         </div>
         <button type="submit" class="btn btn-primary" name="addPegawai">Simpan</button>
@@ -89,10 +98,6 @@
             },
         });
       }
-
-      $(document).ready(function () {
-        getProvinsi();
-      });
 
       $("#provinsi").on("change", function () {
         getProvinsi();
