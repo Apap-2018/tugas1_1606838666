@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -65,11 +66,40 @@ public class PegawaiController {
 	}
 
 	@RequestMapping(value = "/pegawai/cari", method = RequestMethod.GET)
-	public String lihatPegawai(Model model) {
+	public String cariPegawai(
+			Model model,
+			@RequestParam(value = "namaProvinsi", required = false, defaultValue = "") String namaProvinsi,
+			@RequestParam(value = "namaInstansi", required = false, defaultValue = "") String namaInstansi,
+			@RequestParam(value = "namaJabatan", required = false, defaultValue = "") String namaJabatan
+	) {
 		List<ProvinsiModel> listProvinsi = provinsiService.getAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
+		List<InstansiModel> listInstansi = instansiService.getAll();
+		List<PegawaiModel> listPegawai = pegawaiService.getAll();
 
-		model.addAttribute("isCariPegawai", true);
+		if (namaProvinsi.length() > 0) {
+			listPegawai = listPegawai.stream()
+					.filter(pegawaiModel -> pegawaiModel.getInstansi().getProvinsi().getNama().equalsIgnoreCase(namaProvinsi)).collect(Collectors.toList());
+		}
+		if (namaInstansi.length() > 0) {
+			listPegawai = listPegawai.stream()
+					.filter(pegawai -> pegawai.getInstansi().getNama().equalsIgnoreCase(namaInstansi)).collect(Collectors.toList());
+		}
+		if (namaJabatan.length() > 0) {
+			listPegawai = listPegawai.stream()
+					.filter(pegawai -> pegawai.getListJabatan().stream().anyMatch(
+							jabatanPegawai -> jabatanPegawai.getJabatan().getNama().equalsIgnoreCase(namaJabatan)
+					)).collect(Collectors.toList());
+		}
+
 		model.addAttribute("listProvinsi", listProvinsi);
+		model.addAttribute("listInstansi", listInstansi);
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("namaProvinsi", namaProvinsi.toLowerCase());
+		model.addAttribute("namaInstansi", namaInstansi);
+		model.addAttribute("namaJabatan", namaJabatan);
+		model.addAttribute("isCariPegawai", true);
+		model.addAttribute("listPegawai", listPegawai);
 		model.addAttribute("pageTitle", "Cari Pegawai");
 		return "cariPegawai";
 	}
@@ -183,10 +213,11 @@ public class PegawaiController {
 			String tanggalLahir = pegawai.getTanggalLahir().toString();
 			String[] kodeTanggal = tanggalLahir.split("-");
 
-			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasuk(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasukOrderByNipDesc(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
 			String urutan = "01";
+			Integer nipTerakhir = Integer.parseInt(pegawaiMirip.get(0).getNip().substring(14));
 			try {
-				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
+				urutan = (nipTerakhir < 9) ? "0" + (Integer.toString(nipTerakhir + 1)) : Integer.toString(nipTerakhir + 1);
 			} catch (Exception e) {
 
 			}
@@ -287,7 +318,7 @@ public class PegawaiController {
 			@RequestParam(value = "id_instansi", required = false) String id_instansi,
 			Model model
 			) {
-		try {
+//		try {
 			PegawaiModel pegawaiFromDb = pegawaiService.findPegawaiByNIP(pegawai.getNip()).get();
 			InstansiModel instansi = new InstansiModel();
 			if (id_instansi != null) {
@@ -300,10 +331,11 @@ public class PegawaiController {
 			String tanggalLahir = pegawai.getTanggalLahir().toString();
 			String[] kodeTanggal = tanggalLahir.split("-");
 
-			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasuk(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasukOrderByNipDesc(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
 			String urutan = "01";
+			Integer nipTerakhir = Integer.parseInt(pegawaiMirip.get(0).getNip().substring(14));
 			try {
-				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
+				urutan = (nipTerakhir < 9) ? "0" + (Integer.toString(nipTerakhir + 1)) : Integer.toString(nipTerakhir + 1);
 			} catch (Exception e) {
 
 			}
@@ -337,12 +369,12 @@ public class PegawaiController {
 			model.addAttribute("pesan", "diubah, NIP baru adalah ");
 			model.addAttribute("nip", oldNip);
 			return "submitPegawai";
-		} catch (Exception e) {
-			model.addAttribute("method", "ubah");
-			model.addAttribute("pegawai", pegawai);
-			model.addAttribute("pageTitle", "Ubah Pegawai");
-			model.addAttribute("errorFlag", "true");
-			return "formPegawai";
-		}
+//		} catch (Exception e) {
+//			model.addAttribute("method", "ubah");
+//			model.addAttribute("pegawai", pegawai);
+//			model.addAttribute("pageTitle", "Ubah Pegawai");
+//			model.addAttribute("errorFlag", "true");
+//			return "formPegawai";
+//		}
 	}
 }

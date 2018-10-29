@@ -11,7 +11,7 @@ import java.util.List;
 public interface PegawaiDB extends JpaRepository<PegawaiModel, Long> {
     PegawaiModel findByNip(String nip);
     List<PegawaiModel> findAllByTanggalLahirAndTahunMasuk(Date tanggalLahir, String tahunMasuk);
-    List<PegawaiModel> findAllByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
+    List<PegawaiModel> findAllByInstansiAndTanggalLahirAndTahunMasukOrderByNipDesc(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
     List<PegawaiModel> findAllByInstansiOrderByTanggalLahir(InstansiModel instansi);
     List<PegawaiModel> findAllByInstansi(InstansiModel instansi);
     List<PegawaiModel> findAllByListJabatan(JabatanPegawaiModel jabatanPegawaiModel);

@@ -12,11 +12,11 @@
     <div class="container-fluid">
       <h3 class="title">Cari Pegawai</h3>
 
-      <form id="form-params">
+      <form id="form-params" th:action="@{/pegawai/cari}" method="GET">
         <div class="form-group row">
           <label for="provinsi" class="col-2 col-form-label">Provinsi</label>
           <div class="col-4">
-            <select class="form-control" id="provinsi">
+            <select class="form-control" id="provinsi" name="namaProvinsi">
               <option value="">Pilih Provinsi</option>
               <option th:each="provinsi : ${listProvinsi}" th:text="${provinsi.nama}" th:value="${provinsi.nama}"></option>
             </select>
@@ -25,21 +25,28 @@
         <div class="form-group row">
           <label for="instansi" class="col-2 col-form-label">Nama Instansi</label>
           <div class="col-4">
-            <select class="form-control" id="instansi">
+            <select class="form-control" id="instansi" name="namaInstansi">
               <option value="">Pilih Instansi</option>
+              <option th:each="instansi : ${listInstansi}" th:text="${instansi.nama}" th:value="${instansi.nama}"></option>
             </select>
           </div>
         </div>
         <div class="form-group row">
           <label for="jabatan" class="col-2 col-form-label">Jabatan</label>
           <div class="col-4">
-            <select class="form-control" id="jabatan">
+            <select class="form-control" id="jabatan" name="namaJabatan">
               <option value="">Pilih Jabatan</option>
+              <option th:each="jabatan : ${listJabatan}" th:text="${jabatan.nama}" th:value="${jabatan.nama}"></option>
             </select>
           </div>
         </div>
         <button type="submit" class="btn btn-primary">Cari</button>
       </form>
+
+      <h5 style="margin-top: 2%;">Search for:</h5>
+      <h6 th:text="${namaProvinsi != null} ? ${namaProvinsi} : ''" style="text-transform: capitalize;"></h6>
+      <h6 th:text="${namaInstansi != null} ? ${namaInstansi} : ''"></h6>
+      <h6 th:text="${namaJabatan != null} ? ${namaJabatan} : ''"></h6>
 
       <table class="table table-striped table-dark table-hover" style="margin-top: 2%;">
         <thead>
@@ -55,79 +62,109 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="jabatan, iterStats : ${listJabatan}">
-            <!-- <th scope="row" th:text="${iterStats.count}"></th>
-            <td th:text="${jabatan.nama}"></td>
-            <td th:text="${jabatan.deskripsi}"></td>
-            <td th:text="${jabatan.gajiPokok}"></td> -->
+          <tr th:each="pegawai, iterStats : ${listPegawai}">
+            <th scope="row" th:text="${iterStats.count}"></th>
+            <td th:text="${pegawai.nip}"></td>
+            <td th:text="${pegawai.nama}"></td>
+            <td th:text="${pegawai.tempatLahir}"></td>
+            <td th:text="${pegawai.tanggalLahir}"></td>
+            <td th:text="${pegawai.tahunMasuk}"></td>
+            <td th:text="${pegawai.instansi.nama}"></td>
+            <td>
+              <p th:each="jabatanPegawai : ${pegawai.listJabatan}" th:text="${jabatanPegawai.jabatan.nama}"></p>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <script type="text/javascript">
-      function getProvinsi() {
-        $.ajax({
-            method: "POST",
-            contentType: "application/json",
-            url: "/provinsi/get/instansi",
-            data: JSON.stringify( {nama: $("#provinsi").val()} ),
-            cache: false,
-            success : function (response) {
-              for (var i = 0; i < response.listOfString.length; i++) {
-                $("#instansi").append(`<option th:value=${response.listOfString[i]}>${response.listOfString[i]}</option>`);
-              };
-            },
-        });
-      }
+      // function getProvinsi() {
+      //   $.ajax({
+      //       method: "POST",
+      //       contentType: "application/json",
+      //       url: "/provinsi/get/instansi",
+      //       data: JSON.stringify( {nama: $("#provinsi").val()} ),
+      //       cache: false,
+      //       success : function (response) {
+      //         console.log(response);
+      //         for (var i = 0; i < response.listOfInstansiModel.length; i++) {
+      //           $("#instansi").append(`<option value="${response.listOfInstansiModel[i].id}">${response.listOfInstansiModel[i].nama}</option>`);
+      //         };
+      //       },
+      //   });
+      // }
+      //
+      // $("#provinsi").on("change", function () {
+      //   console.log($("#provinsi").val());
+      //   getProvinsi();
+      // });
+      // $("#jabatan").on("change", function () {
+      //   console.log($("#jabatan").val());
+      // });
 
-      function getJabatan() {
-        $.ajax({
-            method: "GET",
-            contentType: "application/json",
-            url: "/jabatan/get",
-            cache: false,
-            success : function (response) {
-              console.log(response);
-              for (var i = 0; i < response.listOfString.length; i++) {
-                $('#jabatan').append(
-                  `<option th:value=${response.listOfString[i]}>${response.listOfString[i]}</option>`
-                );
-              };
-            },
-        });
-      }
-
-      function syncDataTable() {
-        var params = {};
-        params["provinsi"] = $("#provinsi").val();
-        params["instansi"] = $("#instansi").val();
-        params["jabatan"] = $("#jabatan").val();
-        $.ajax({
-            method: "POST",
-            contentType: "application/json",
-            url: "/pegawai/cari/data",
-            data: JSON.stringify(params),
-            cache: false,
-            success : function (response) {
-              console.log(response);
-            },
-        });
-      }
-
-      $("#provinsi").on("change", function () {
-        getProvinsi();
-      });
-
-      $(document).ready(function () {
-        getJabatan();
-      });
-
-      $("#form-params").submit(function (event) {
-        event.preventDefault();
-
-        syncDataTable();
-      })
+      // function getProvinsi() {
+      //   $.ajax({
+      //       method: "POST",
+      //       contentType: "application/json",
+      //       url: "/provinsi/get/instansi",
+      //       data: JSON.stringify( {nama: $("#provinsi").val()} ),
+      //       cache: false,
+      //       success : function (response) {
+      //         for (var i = 0; i < response.listOfString.length; i++) {
+      //           $("#instansi").append(`<option th:value=${response.listOfString[i]}>${response.listOfString[i]}</option>`);
+      //         };
+      //       },
+      //   });
+      // }
+      //
+      // function getJabatan() {
+      //   $.ajax({
+      //       method: "GET",
+      //       contentType: "application/json",
+      //       url: "/jabatan/get",
+      //       cache: false,
+      //       success : function (response) {
+      //         console.log(response);
+      //         for (var i = 0; i < response.listOfString.length; i++) {
+      //           $('#jabatan').append(
+      //             `<option th:value=${response.listOfString[i]}>${response.listOfString[i]}</option>`
+      //           );
+      //         };
+      //       },
+      //   });
+      // }
+      //
+      // function syncDataTable() {
+      //   var params = {};
+      //   params["provinsi"] = $("#provinsi").val();
+      //   params["instansi"] = $("#instansi").val();
+      //   params["jabatan"] = $("#jabatan").val();
+      //   $.ajax({
+      //       method: "POST",
+      //       contentType: "application/json",
+      //       url: "/pegawai/cari/data",
+      //       data: JSON.stringify(params),
+      //       cache: false,
+      //       success : function (response) {
+      //         console.log(response);
+      //       },
+      //   });
+      // }
+      //
+      // $("#provinsi").on("change", function () {
+      //   getProvinsi();
+      // });
+      //
+      // $(document).ready(function () {
+      //   getJabatan();
+      // });
+      //
+      // $("#form-params").submit(function (event) {
+      //   event.preventDefault();
+      //
+      //   syncDataTable();
+      // })
     </script>
   </body>
 </html>

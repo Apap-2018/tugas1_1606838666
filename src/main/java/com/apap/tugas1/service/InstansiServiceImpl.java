@@ -30,4 +30,9 @@ public class InstansiServiceImpl implements InstansiService {
     public List<InstansiModel> findAllByProvinsi(ProvinsiModel provinsi) {
         return instansiDB.findAllByProvinsi(provinsi);
     }
+
+    @Override
+    public List<InstansiModel> getAll() {
+        return instansiDB.findAll();
+    }
 }

@@ -10,5 +10,5 @@ public interface InstansiService {
     InstansiModel getInstansiById(long id);
     InstansiModel findByNama(String nama);
     List<InstansiModel> findAllByProvinsi(ProvinsiModel provinsi);
-
+    List<InstansiModel> getAll();
 }

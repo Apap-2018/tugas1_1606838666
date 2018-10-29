@@ -14,7 +14,7 @@ public interface PegawaiService {
     void addPegawai(PegawaiModel pegawai);
     void editPegawai(PegawaiModel pegawai, String oldNip);
     List<PegawaiModel> findAllByTanggalLahirAndTahunMasuk(Date tanggalLahir, String tahunMasuk);
-    List<PegawaiModel> findAllByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
+    List<PegawaiModel> findAllByInstansiAndTanggalLahirAndTahunMasukOrderByNipDesc(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
     List<PegawaiModel> findAllByInstansiOrderByTanggalLahir(InstansiModel instansi);
     List<PegawaiModel> getAll();
     List<PegawaiModel> findAllByInstansi(InstansiModel instansi);
