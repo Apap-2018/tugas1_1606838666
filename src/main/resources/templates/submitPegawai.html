@@ -10,7 +10,23 @@
 
     <div class="container-fluid">
       <h3>Sukses!</h3>
-      <h6 th:text="'Pegawai dengan NIP ' + ${nip} + ' berhasil ' + ${pesan}"></h6>
+      <h6 th:unless="${newNip == null}" th:text="'Pegawai dengan NIP ' + ${nip} + ' berhasil ' + ${pesan} + ' ' + ${newNip}"></h6>
+      <h6 th:if="${newNip == null}" th:text="'Pegawai dengan NIP ' + ${nip} + ' berhasil ' + ${pesan}"></h6>
+
+      <br style="margin-bottom: 5%;">
+
+      <div class="row">
+        <form th:action="@{/pegawai}" method="GET">
+          <input th:if="${method == 'tambah'}" type="hidden" th:value="${nip}" name="nip">
+          <input th:if="${method == 'ubah'}" type="hidden" th:value="${newNip}" name="nip">
+          <button type="submit" class="btn btn-primary">Lihat Detail Pegawai</button>
+        </form>
+      </div>
+      <div class="row" style="margin-top: 1%;">
+        <form th:action="@{/}" method="GET">
+          <button type="submit" class="btn btn-success">Home</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>

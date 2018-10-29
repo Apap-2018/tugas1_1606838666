@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.com">
+
+  <head>
+    <title>404 Not found</title>
+    <object th:include="fragments/fragment :: css&js" th:remove="tag"></object>
+
+  </head>
+
+  <body>
+    <nav th:replace="fragments/fragment :: navbar"></nav>
+    <div class="container-fluid">
+      <h2>Tambah / Ubah pegawai gagal, pastikan telah mengisi seluruh field form dengan benar</h2>
+
+      <br>
+
+      <form th:action="@{'/'}" method="GET">
+        <button type="submit" class="btn btn-success" id="lihat">Home</button>
+      </form>
+    </div>
+  </body>
+</html>

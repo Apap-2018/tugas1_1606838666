@@ -11,6 +11,7 @@
 
     <div class="container-fluid">
       <h3 th:text="${method} + ' Pegawai'" style="text-transform: capitalize;"></h3>
+      <input type="hidden" id="error-flag" th:value="${errorFlag}">
 
       <form id="form-pegawai" th:action="@{'/pegawai/' + ${method}}" method="POST" th:object="${pegawai}">
         <input th:if="${method == 'ubah'}" type="hidden" th:field="*{nip}" th:value="*{nip}">
@@ -83,6 +84,12 @@
     </div>
 
     <script type="text/javascript">
+      $(document).ready(function() {
+        if ($("#error-flag").val() == "true") {
+          alert("Pastikan semua form field terisi dengan value yang tepat");
+        };
+      })
+
       function getProvinsi() {
         $.ajax({
             method: "POST",
@@ -102,34 +109,6 @@
       $("#provinsi").on("change", function () {
         getProvinsi();
       });
-
-      $("#form-pegawai").submit(function (event) {
-        // event.preventDefault();
-        // console.log($("#namaInstansi").val());
-        // var params = {};
-        // params["namaPegawai"] = $("#namaPegawai").val();
-        // params["tempatLahir"] = $("#tempatLahir").val();
-        // params["tanggalLahir"] = $("#tanggalLahir").val();
-        // params["tahunMasuk"] = $("#tahunMasuk").val();
-        // params["provinsi"] = $("#provinsi").val();
-        // params["namaInstansi"] = $("#namaInstansi").val();
-        // params["listJabatan"] = [];
-        // for (var i = 1; i <= currentIndex+1; i++) {
-        //   params["listJabatan"].push($(`#jabatan${i} option:selected`).html());
-        // }
-        // console.log(params);
-        // $.ajax({
-        //     method: "POST",
-        //     contentType: "application/json",
-        //     url: "/pegawai/tambah",
-        //     data: JSON.stringify(params),
-        //     cache: false,
-        //     success : function (response) {
-        //       window.location.href = "/pegawai/berhasil/tambah?nip=" + response.message;
-        //     },
-        // });
-      })
-
     </script>
   </body>
 </html>

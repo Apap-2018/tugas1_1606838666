@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -124,12 +122,6 @@ public class PegawaiController {
 	
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.GET)
 	public String tambahPegawai(Model model) {
-//		PegawaiModel pegawai = new PegawaiModel();
-//		List<JabatanPegawaiModel> dummyList = new ArrayList<>();
-//		JabatanPegawaiModel dummyJabatanPegawai = new JabatanPegawaiModel();
-//		dummyJabatanPegawai.setPegawai(pegawai);
-//		dummyList.add(dummyJabatanPegawai);
-//		pegawai.setListJabatan(dummyList);
 		PegawaiModel pegawai = new PegawaiModel();
 		pegawai.setListJabatan(new ArrayList<JabatanPegawaiModel>());
 		pegawai.getListJabatan().add(new JabatanPegawaiModel());
@@ -183,45 +175,48 @@ public class PegawaiController {
 			@ModelAttribute PegawaiModel pegawai,
 			@RequestParam String id_instansi
 			) {
-		InstansiModel instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
-		pegawai.setInstansi(instansi);
-
-		String tanggalLahir = pegawai.getTanggalLahir().toString();
-		String[] kodeTanggal = tanggalLahir.split("-");
-
-		List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
-		String urutan = "01";
 		try {
-			urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
-		} catch (Exception e) {
+			InstansiModel instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
+			pegawai.setInstansi(instansi);
 
-		}
-		String nip = id_instansi + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + pegawai.getTahunMasuk() + urutan;
+			String tanggalLahir = pegawai.getTanggalLahir().toString();
+			String[] kodeTanggal = tanggalLahir.split("-");
 
-		pegawai.setNip(nip);
-		pegawaiService.addPegawai(pegawai);
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			String urutan = "01";
+			try {
+				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
+			} catch (Exception e) {
 
-		PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
-		List<JabatanPegawaiModel> jabatanModelModified = new ArrayList<>();
-
-		for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
-			if (jabatan == null) {
-				System.out.println("NULL!");
-			} else {
-				jabatan.setPegawai(pegawaiAdded);
-//				System.out.println(jabatan.getJabatan().getNama());
-//				System.out.println(jabatan.getPegawai().getNama());
-//				System.out.println(jabatan.getId());
-				jabatanModelModified.add(jabatan);
 			}
-		}
-		for (JabatanPegawaiModel jabatan: jabatanModelModified) {
-				jabatanPegawaiService.addJabatanPegawai(jabatan);
-		}
-		model.addAttribute("pesan", "ditambahkan");
-		model.addAttribute("nip", nip);
+			String nip = id_instansi + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + pegawai.getTahunMasuk() + urutan;
 
-		return "submitPegawai";
+			pegawai.setNip(nip);
+			pegawaiService.addPegawai(pegawai);
+
+			PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
+			List<JabatanPegawaiModel> jabatanModelModified = new ArrayList<>();
+
+			for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
+				if (jabatan == null) {
+					System.out.println("NULL!");
+				} else {
+					jabatan.setPegawai(pegawaiAdded);
+					jabatanModelModified.add(jabatan);
+				}
+			}
+			for (JabatanPegawaiModel jabatan: jabatanModelModified) {
+				jabatanPegawaiService.addJabatanPegawai(jabatan);
+			}
+
+			model.addAttribute("method", "tambah");
+			model.addAttribute("pesan", "ditambahkan");
+			model.addAttribute("nip", nip);
+			return "submitPegawai";
+		} catch (Exception e) {
+			model.addAttribute("errorFlag", "true");
+			return "formPegawai";
+		}
 	}
 	
 	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.GET)
@@ -287,60 +282,58 @@ public class PegawaiController {
 			@RequestParam(value = "id_instansi", required = false) String id_instansi,
 			Model model
 			) {
-		PegawaiModel pegawaiFromDb = pegawaiService.findPegawaiByNIP(pegawai.getNip()).get();
-		InstansiModel instansi = new InstansiModel();
-		if (id_instansi != null) {
-			instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
-		} else {
-			instansi = pegawaiFromDb.getInstansi();
-		}
-		pegawai.setInstansi(instansi);
-
-		String tanggalLahir = pegawai.getTanggalLahir().toString();
-		String[] kodeTanggal = tanggalLahir.split("-");
-
-		List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
-		String urutan = "01";
 		try {
-			urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
-		} catch (Exception e) {
-
-		}
-		String nip = instansi.getId() + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + pegawai.getTahunMasuk() + urutan;
-
-		String oldNip = pegawai.getNip();
-		pegawai.setNip(nip);
-		pegawaiService.editPegawai(pegawai, oldNip);
-
-		PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
-		List<JabatanPegawaiModel> jabatanModelModified = new ArrayList<>();
-
-		for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
-			if (jabatan == null) {
-				System.out.println("NULL!");
+			PegawaiModel pegawaiFromDb = pegawaiService.findPegawaiByNIP(pegawai.getNip()).get();
+			InstansiModel instansi = new InstansiModel();
+			if (id_instansi != null) {
+				instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
 			} else {
-				jabatan.setPegawai(pegawaiAdded);
-				System.out.println(jabatan.getJabatan().getNama());
-				System.out.println(jabatan.getPegawai().getNama());
-				System.out.println(jabatan.getId());
-				jabatanModelModified.add(jabatan);
+				instansi = pegawaiFromDb.getInstansi();
 			}
-		}
-		jabatanPegawaiService.deleteByPegawai(pegawaiFromDb);
-		for (JabatanPegawaiModel jabatan: jabatanModelModified) {
-			jabatanPegawaiService.addJabatanPegawai(jabatan);
-		}
-		model.addAttribute("pesan", "diubah, NIP baru adalah " + pegawai.getNip());
-		model.addAttribute("nip", oldNip);
-		return "submitPegawai";
-	}
+			pegawai.setInstansi(instansi);
 
-	@RequestMapping(value = "/pegawai/berhasil/ubah", method = RequestMethod.GET)
-	public String pegawaiDiubah(@RequestParam String nip, Model model) {
-		model.addAttribute("nip", nip);
-		model.addAttribute("pesan", "diubah");
-		model.addAttribute("pageTitle", "Detail Pegawai");
-		return "submitPegawai";
-	}
+			String tanggalLahir = pegawai.getTanggalLahir().toString();
+			String[] kodeTanggal = tanggalLahir.split("-");
 
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			String urutan = "01";
+			try {
+				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
+			} catch (Exception e) {
+
+			}
+			String nip = instansi.getId() + kodeTanggal[2] + kodeTanggal[1] + kodeTanggal[0].substring(2) + pegawai.getTahunMasuk() + urutan;
+
+			String oldNip = pegawai.getNip();
+			pegawai.setNip(nip);
+			pegawaiService.editPegawai(pegawai, oldNip);
+
+			PegawaiModel pegawaiAdded = pegawaiService.findPegawaiByNIP(nip).get();
+			List<JabatanPegawaiModel> jabatanModelModified = new ArrayList<>();
+
+			for (JabatanPegawaiModel jabatan: pegawaiAdded.getListJabatan()) {
+				if (jabatan == null) {
+					System.out.println("NULL!");
+				} else {
+					jabatan.setPegawai(pegawaiAdded);
+					System.out.println(jabatan.getJabatan().getNama());
+					System.out.println(jabatan.getPegawai().getNama());
+					System.out.println(jabatan.getId());
+					jabatanModelModified.add(jabatan);
+				}
+			}
+			jabatanPegawaiService.deleteByPegawai(pegawaiFromDb);
+			for (JabatanPegawaiModel jabatan: jabatanModelModified) {
+				jabatanPegawaiService.addJabatanPegawai(jabatan);
+			}
+			model.addAttribute("method", "ubah");
+			model.addAttribute("newNip", pegawai.getNip());
+			model.addAttribute("pesan", "diubah, NIP baru adalah ");
+			model.addAttribute("nip", oldNip);
+			return "submitPegawai";
+		} catch (Exception e) {
+			model.addAttribute("errorFlag", "true");
+			return "formPegawai";
+		}
+	}
 }
