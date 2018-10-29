@@ -30,4 +30,9 @@ public class JabatanPegawaiServiceImpl implements JabatanPegawaiService {
     public void deleteByPegawai(PegawaiModel pegawai) {
         jabatanPegawaiDB.deleteByPegawai(pegawai);
     }
+
+    @Override
+    public Integer countAllByJabatan(JabatanModel jabatan) {
+        return jabatanPegawaiDB.countAllByJabatan(jabatan);
+    }
 }

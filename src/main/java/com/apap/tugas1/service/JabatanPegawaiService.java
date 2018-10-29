@@ -10,5 +10,5 @@ public interface JabatanPegawaiService {
     ArrayList<JabatanPegawaiModel> findAllByJabatan(JabatanModel jabatan);
     void addJabatanPegawai(JabatanPegawaiModel jabatanPegawaiModel);
     void deleteByPegawai(PegawaiModel pegawai);
-
+    Integer countAllByJabatan(JabatanModel jabatan);
 }

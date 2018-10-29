@@ -10,4 +10,5 @@ import java.util.ArrayList;
 public interface JabatanPegawaiDB extends JpaRepository<JabatanPegawaiModel, Long> {
     ArrayList<JabatanPegawaiModel> findAllByJabatan(JabatanModel jabatan);
     void deleteByPegawai(PegawaiModel pegawai);
+    Integer countAllByJabatan(JabatanModel jabatan);
 }

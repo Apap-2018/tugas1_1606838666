@@ -31,6 +31,9 @@
           <li class="nav-item" th:class="${isLihatSemuaJabatan} ? active : ''">
             <a th:href="@{/jabatan/viewall}" class="nav-link">Lihat Semua Jabatan</a>
           </li>
+          <li class="nav-item" th:class="${isJumlahPegawai} ? active : ''">
+            <a th:href="@{/jabatan/jumlah/pegawai}" class="nav-link">Jumlah Pegawai</a>
+          </li>
         </ul>
       </div>
     </nav>

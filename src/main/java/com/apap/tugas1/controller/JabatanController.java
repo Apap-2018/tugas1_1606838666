@@ -125,4 +125,19 @@ public class JabatanController {
         result.setListOfString(listNamaJabatan);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/jabatan/jumlah/pegawai", method = RequestMethod.GET)
+    public String getJabatanJumlahPegawai(Model model) {
+        Map<String, Integer> jabatanDictionary = new HashMap<>();
+        List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
+
+        for (JabatanModel jabatan: listJabatan) {
+            Integer jumlahPegawai = jabatanPegawaiService.countAllByJabatan(jabatan);
+            jabatanDictionary.put(jabatan.getNama(), jumlahPegawai);
+        }
+        model.addAttribute("isJumlahPegawai", true);
+        model.addAttribute("pageTittle", "Jumlah Pegawai");
+        model.addAttribute("jabatanDictionary", jabatanDictionary);
+        return "jumlahPegawai";
+    }
 }

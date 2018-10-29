@@ -176,14 +176,14 @@ public class PegawaiController {
 			@ModelAttribute PegawaiModel pegawai,
 			@RequestParam String id_instansi
 			) {
-		try {
+//		try {
 			InstansiModel instansi = instansiService.getInstansiById(Long.valueOf(id_instansi));
 			pegawai.setInstansi(instansi);
 
 			String tanggalLahir = pegawai.getTanggalLahir().toString();
 			String[] kodeTanggal = tanggalLahir.split("-");
 
-			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasuk(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
 			String urutan = "01";
 			try {
 				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
@@ -215,11 +215,13 @@ public class PegawaiController {
 			model.addAttribute("pesan", "ditambahkan");
 			model.addAttribute("nip", nip);
 			return "submitPegawai";
-		} catch (Exception e) {
-			model.addAttribute("pageTitle", "Tambah Pegawai");
-			model.addAttribute("errorFlag", "true");
-			return "formPegawai";
-		}
+//		} catch (Exception e) {
+//			model.addAttribute("pageTitle", "Tambah Pegawai");
+//			model.addAttribute("pegawai", pegawai);
+//			model.addAttribute("method", "tambah");
+//			model.addAttribute("errorFlag", "true");
+//			return "formPegawai";
+//		}
 	}
 	
 	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.GET)
@@ -298,7 +300,7 @@ public class PegawaiController {
 			String tanggalLahir = pegawai.getTanggalLahir().toString();
 			String[] kodeTanggal = tanggalLahir.split("-");
 
-			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByTanggalLahirAndTahunMasuk(pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+			List<PegawaiModel> pegawaiMirip = pegawaiService.findAllByInstansiAndTanggalLahirAndTahunMasuk(instansi, pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
 			String urutan = "01";
 			try {
 				urutan = (pegawaiMirip.size() < 9) ? "0" + (Integer.toString(pegawaiMirip.size() + 1)) : Integer.toString(pegawaiMirip.size() + 1);
@@ -336,6 +338,8 @@ public class PegawaiController {
 			model.addAttribute("nip", oldNip);
 			return "submitPegawai";
 		} catch (Exception e) {
+			model.addAttribute("method", "ubah");
+			model.addAttribute("pegawai", pegawai);
 			model.addAttribute("pageTitle", "Ubah Pegawai");
 			model.addAttribute("errorFlag", "true");
 			return "formPegawai";

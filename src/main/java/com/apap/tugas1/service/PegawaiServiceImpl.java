@@ -43,6 +43,11 @@ public class PegawaiServiceImpl implements PegawaiService {
     }
 
     @Override
+    public List<PegawaiModel> findAllByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk) {
+        return pegawaiDB.findAllByInstansiAndTanggalLahirAndTahunMasuk(instansi, tanggalLahir, tahunMasuk);
+    }
+
+    @Override
     public List<PegawaiModel> getAll() {
         return pegawaiDB.findAll();
     }
